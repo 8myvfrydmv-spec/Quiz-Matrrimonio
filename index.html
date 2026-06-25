@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico · Hombres de Palabra</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0a0a0c;
+  --surface:#121214;
+  --card:#161618;
+  --border:rgba(196,168,104,.16);
+  --gold:#c4a868;
+  --gold-l:#e2c98a;
+  --silver:#c9ccd1;
+  --text:#eceae6;
+  --muted:#8a8780;
+  --r:12px;
+}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:26px 16px 60px;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% -5%,rgba(196,168,104,.06),transparent),
+    radial-gradient(ellipse 90% 70% at 50% 110%,rgba(201,204,209,.03),transparent);
+}
+
+.wrap{max-width:560px;width:100%}
+
+/* BRAND / CREST */
+.brand{text-align:center;margin-bottom:30px}
+.brand-logo{
+  width:150px;max-width:60%;height:auto;display:block;margin:0 auto 12px;
+  border-radius:10px;filter:drop-shadow(0 4px 18px rgba(0,0,0,.6))
+}
+.brand-name{
+  font-family:'Cinzel',serif;font-size:15px;font-weight:600;
+  letter-spacing:4px;text-transform:uppercase;
+  background:linear-gradient(180deg,#e2c98a,#c4a868);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:4px;
+}
+.brand-sub{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+
+/* SCREENS */
+.screen{display:none}
+.screen.active{display:block;animation:up .4s ease}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARD */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:40px 34px;
+}
+@media(max-width:420px){.card{padding:30px 22px}}
+
+/* INTRO */
+.intro{text-align:center}
+.intro h1{
+  font-family:'Cinzel',serif;font-weight:600;
+  font-size:25px;line-height:1.4;margin-bottom:16px;letter-spacing:.5px
+}
+.intro h1 em{font-style:normal;color:var(--gold-l)}
+.intro p{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:26px}
+.pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:30px}
+.pill{
+  background:rgba(196,168,104,.07);
+  border:1px solid rgba(196,168,104,.26);
+  color:var(--gold-l);
+  font-size:11px;padding:5px 14px;border-radius:6px;letter-spacing:.5px;font-weight:500
+}
+
+/* BUTTONS */
+.btn-gold{
+  background:linear-gradient(135deg,#c4a868,#e2c98a);
+  color:#0a0a0c;font-weight:700;font-size:15px;
+  padding:16px 32px;border:none;border-radius:8px;
+  cursor:pointer;transition:transform .2s,box-shadow .2s;
+  width:100%;letter-spacing:.5px;text-transform:uppercase
+}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(196,168,104,.32)}
+
+/* PROGRESS */
+.prog-wrap{margin-bottom:26px}
+.prog-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:8px;letter-spacing:.5px}
+.prog-bg{height:3px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#c4a868,#e2c98a);border-radius:3px;transition:width .5s ease}
+
+/* QUESTION */
+.q-num{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;font-weight:600}
+.q-text{
+  font-family:'Cinzel',serif;font-weight:500;
+  font-size:19px;line-height:1.5;margin-bottom:26px
+}
+@media(max-width:420px){.q-text{font-size:17px}}
+
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:9px;padding:14px 16px;
+  text-align:left;color:var(--text);font-size:14px;
+  line-height:1.55;cursor:pointer;
+  transition:all .18s;
+  display:flex;align-items:flex-start;gap:12px
+}
+.opt:hover{border-color:var(--gold);background:rgba(196,168,104,.06)}
+.opt.sel{border-color:var(--gold);background:rgba(196,168,104,.11);color:var(--gold-l)}
+.opt-letter{
+  background:rgba(196,168,104,.12);color:var(--gold);
+  font-size:11px;font-weight:700;font-family:'Cinzel',serif;
+  width:24px;height:24px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;
+}
+.opt.sel .opt-letter{background:var(--gold);color:#0a0a0c}
+
+.btn-next{
+  margin-top:24px;
+  background:linear-gradient(135deg,#c4a868,#e2c98a);
+  color:#0a0a0c;font-weight:700;font-size:14px;
+  padding:14px 32px;border:none;border-radius:8px;
+  cursor:pointer;transition:all .2s;width:100%;
+  opacity:.3;pointer-events:none;letter-spacing:.5px;text-transform:uppercase
+}
+.btn-next.on{opacity:1;pointer-events:all}
+.btn-next.on:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(196,168,104,.32)}
+
+/* RESULT */
+.res-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.res-head{padding:38px 32px 26px;text-align:center;border-bottom:1px solid rgba(255,255,255,.05);position:relative}
+.res-head::before{content:"";position:absolute;inset:0;background:var(--lc-bg);opacity:.4;pointer-events:none}
+@media(max-width:420px){.res-head{padding:28px 20px 22px}}
+.res-icon{position:relative;z-index:1;margin-bottom:14px}
+.res-icon svg{width:54px;height:54px;filter:drop-shadow(0 0 16px var(--lc-glow))}
+.res-tag{
+  position:relative;z-index:1;
+  font-size:10px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;
+  padding:5px 15px;border-radius:6px;display:inline-block;margin-bottom:14px;
+  background:var(--lc-bg);color:var(--lc);border:1px solid var(--lc)
+}
+.res-dots{position:relative;z-index:1;display:flex;justify-content:center;gap:7px;margin:0 0 14px}
+.res-dot{width:28px;height:4px;border-radius:2px;background:rgba(255,255,255,.09)}
+.res-dot.on{background:var(--lc)}
+.res-title{position:relative;z-index:1;font-family:'Cinzel',serif;font-weight:600;font-size:23px;color:var(--lc);margin-bottom:5px;letter-spacing:.5px}
+.res-sub{position:relative;z-index:1;font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--lc);opacity:.78}
+
+.res-body{padding:28px 32px 32px}
+@media(max-width:420px){.res-body{padding:22px 20px}}
+.sec-label{font-size:10px;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:9px}
+.res-diag{font-size:13.5px;color:var(--text);line-height:1.8;margin-bottom:24px}
+.alert-box{
+  border-radius:9px;padding:15px 17px;margin-bottom:24px;
+  font-size:13px;line-height:1.7;
+  background:var(--lc-bg);border-left:3px solid var(--lc);color:var(--text)
+}
+.alert-box strong{color:var(--lc)}
+.cta-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:12px;font-weight:600}
+.btn-cta{
+  background:linear-gradient(135deg,#c4a868,#e2c98a);
+  color:#0a0a0c;font-weight:700;font-size:14px;
+  padding:16px 28px;border:none;border-radius:8px;
+  cursor:pointer;transition:all .2s;width:100%;
+  text-decoration:none;display:block;text-align:center;margin-bottom:10px;
+  letter-spacing:.5px;text-transform:uppercase
+}
+.btn-cta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(196,168,104,.32)}
+.btn-reset{
+  background:transparent;border:1px solid rgba(255,255,255,.1);
+  color:var(--muted);font-size:12px;padding:11px 24px;
+  border-radius:8px;cursor:pointer;transition:all .2s;width:100%;letter-spacing:.5px
+}
+.btn-reset:hover{border-color:rgba(255,255,255,.24);color:var(--text)}
+
+/* level color tokens */
+.lv1{--lc:#9aa6b0;--lc-bg:rgba(154,166,176,.09);--lc-glow:rgba(154,166,176,.35)}
+.lv2{--lc:#d8a94a;--lc-bg:rgba(216,169,74,.09);--lc-glow:rgba(216,169,74,.35)}
+.lv3{--lc:#d96b3a;--lc-bg:rgba(217,107,58,.09);--lc-glow:rgba(217,107,58,.35)}
+.lv4{--lc:#8c7d99;--lc-bg:rgba(140,125,153,.09);--lc-glow:rgba(140,125,153,.35)}
+
+.footer{text-align:center;margin-top:30px;font-size:10px;color:rgba(255,255,255,.22);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <img class="brand-logo" src="https://i.postimg.cc/L6hbQbrF/Logo-Actualizado.jpg" alt="Hombres de Palabra"
+         onload="document.getElementById('brandFallback').style.display='none';" />
+    <div class="brand-name" id="brandFallback">Hombres de Palabra</div>
+    <div class="brand-sub">Luis Ly · El Retorno del Rey</div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="screen active" id="s-intro">
+    <div class="card intro">
+      <h1>¿Tu matrimonio tiene<br><em>posibilidad real de recuperarse?</em></h1>
+      <p>5 preguntas directas para hacer un diagnóstico honesto del estado de tu relación — y saber exactamente cuál es tu próximo movimiento.</p>
+      <div class="pills">
+        <span class="pill">5 preguntas</span>
+        <span class="pill">4 niveles</span>
+        <span class="pill">Menos de 3 min</span>
+      </div>
+      <button class="btn-gold" onclick="start()">Iniciar diagnóstico</button>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="s-quiz">
+    <div class="prog-wrap">
+      <div class="prog-meta">
+        <span id="qctr">Pregunta 1 de 5</span>
+        <span id="qpct">0%</span>
+      </div>
+      <div class="prog-bg"><div class="prog-fill" id="pfill" style="width:0%"></div></div>
+    </div>
+    <div class="card" id="qcard">
+      <div class="q-num" id="qnum">PREGUNTA 01</div>
+      <div class="q-text" id="qtxt"></div>
+      <div class="opts" id="qopts"></div>
+      <button class="btn-next" id="bnext" onclick="next()">Continuar</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="s-result"></div>
+
+  <div class="footer">Hombres de Palabra · El Retorno del Rey · 2026</div>
+</div>
+
+<script>
+const CAL="https://calendar.app.google/4EJQurM6pUYxyALx8";
+const WA="https://w.app/hombredepalabra";
+
+const Qs=[
+  {
+    t:"¿Cómo funciona la comunicación en tu casa hoy?",
+    o:[
+      {t:"Hablamos, pero siento que hablamos idiomas distintos: mi lógica no resuelve su lado emocional",l:1},
+      {t:"Cada conversación importante termina en discusión y siempre en el mismo círculo",l:2},
+      {t:"Ya casi no hablamos; ella dejó de discutir y de quejarse",l:3},
+      {t:"No hay comunicación; la decisión de separarnos ya está sobre la mesa o tomada",l:4}
+    ]
+  },
+  {
+    t:"¿En qué estado está la intimidad sexual?",
+    o:[
+      {t:"Existe, pero se está volviendo un trámite o empieza a desaparecer",l:1},
+      {t:"Escasa; casi siempre tengo que pedirla y el rechazo es la norma",l:2},
+      {t:"Nula; cualquier intento de acercamiento se siente forzado",l:3},
+      {t:"Inexistente; dormimos separados o la relación es solo de apariencias",l:4}
+    ]
+  },
+  {
+    t:"Haz un 'system audit': ¿cómo terminan tus discusiones?",
+    o:[
+      {t:"Con incomodidad, pero hay respeto y se resuelven pronto",l:1},
+      {t:"Reacciono en lugar de responder; el ratio positivo/negativo ya se rompió",l:2},
+      {t:"Con un silencio que se quedó instalado; ella perdió la esperanza de ser escuchada",l:3},
+      {t:"Ya no discutimos; hay indiferencia total y desapego firme",l:4}
+    ]
+  },
+  {
+    t:"¿Qué lugar ocupas dentro de tu propia familia?",
+    o:[
+      {t:"Funcionamos como roommates: respeto sí, conexión cada vez menos",l:1},
+      {t:"Me siento un cajero automático o un extraño en mi propia casa",l:2},
+      {t:"Estoy presente pero emocionalmente ya estoy fuera del sistema",l:3},
+      {t:"Mi rol terminó; la familia opera sin mí o ya estoy fuera",l:4}
+    ]
+  },
+  {
+    t:"Si hoy tuvieras un plan claro, ¿dónde está ella?",
+    o:[
+      {t:"Dispuesta; ambos queremos, solo faltan las herramientas correctas",l:1},
+      {t:"Cansada y con resistencia, pero aún hay margen de maniobra",l:2},
+      {t:"En ambivalencia: evaluando si quedarse o irse, sin decisión final",l:3},
+      {t:"Decidida a terminar; cruzó el punto de no retorno",l:4}
+    ]
+  }
+];
+
+const ICON={
+  shield:(c)=>`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path d="M24 3 L42 8 V26 C42 37 34 44 24 47 C14 44 6 37 6 26 V8 Z" fill="none" stroke="${c}" stroke-width="2.2" stroke-linejoin="round"/><path d="M24 14 V30 M24 33 V36" stroke="${c}" stroke-width="2.6" stroke-linecap="round"/></svg>`
+};
+
+const Lvls={
+  1:{
+    icon:"🛡️",name:"Distancia Silenciosa",tag:"NIVEL 1",sub:"Dolor Manejable",cls:"lv1",dots:1,
+    diag:"Viven como <em>roommates</em>. Aún hay respeto y la casa funciona, pero la intimidad se está convirtiendo en un trámite o ha empezado a desaparecer. Tu comunicación lógica no logra resolver la falta de conexión emocional, y sientes que hablan idiomas diferentes.",
+    alert:"<strong>ATENCIÓN:</strong> Las primeras grietas están apareciendo, y el tiempo sin acción no cura los matrimonios: los entierra. Estás en el momento exacto para intervenir antes de que el daño sea costoso. Toma acción ahora y descubre cómo liderar esta etapa.",
+    cta:"Agendar mi llamada de diagnóstico 1-1"
+  },
+  2:{
+    icon:"⚙️",name:"Fuego Cruzado",tag:"NIVEL 2",sub:"Dolor Medio",cls:"lv2",dots:2,
+    diag:"Las discusiones son constantes, intensas y terminan siempre en el mismo círculo vicioso. Sientes que en tu casa solo te ven como un cajero automático, o eres un extraño en tu propia familia. Al hacer un <em>system audit</em> de tus discusiones, es evidente que el ratio de interacciones positivas frente a negativas (5:1) se rompió, y estás reaccionando en lugar de responder.",
+    alert:"<strong>ATENCIÓN:</strong> Tu matrimonio tiene la \"luz del motor encendida\". Esperar a que las cosas se calmen solas solo acumulará más daño estructural. Aún hay margen de maniobra para recuperar tu liderazgo. Agenda tu llamada urgente para trazar un plan de acción.",
+    cta:"Agendar mi llamada de diagnóstico 1-1"
+  },
+  3:{
+    icon:"🔥",name:"Al Borde del Colapso",tag:"NIVEL 3",sub:"Dolor Fuerte — Riesgo Alto",cls:"lv3",dots:3,
+    diag:"El silencio se ha vuelto la norma; ella ya no discute ni se queja porque perdió la esperanza de ser escuchada. La intimidad es nula y cualquier intento de acercamiento se siente forzado. Estás operando dentro de lo que la ciencia llama el <em>período de ambivalencia</em>: una ventana estrecha donde ella aún no ha tomado la decisión final, pero la está evaluando.",
+    alert:"<strong>URGENCIA MÁXIMA.</strong> Tu relación corre un alto riesgo de ruptura irreversible. Cada semana que esperas consolida sus patrones de desapego. No intentes arreglar esto con gestos vacíos. Toma acción AHORA para evaluar si es posible aplicar un protocolo de emergencia.",
+    cta:"Agendar llamada de diagnóstico AHORA"
+  },
+  4:{
+    icon:"🐧",name:"Ruptura Estructural",tag:"NIVEL 4",sub:"Punto de No Retorno",cls:"lv4",dots:4,
+    diag:"Te lo digo de hombre a hombre: el sistema se ha roto. Los límites han sido cruzados de manera irreversible, la decisión de separación ya es firme, o los patrones de desapego superaron la ventana de intervención.",
+    alert:"En este punto, forzar la reconexión solo generará más resistencia. Si deseas reconstruir tu vida y eventualmente la relación, será por un camino largo de transformación personal donde mi protocolo de 12 semanas no es el primer paso. Quiero compartirte material gratuito y dos pasos críticos de contingencia para enfocarte en tu propia estabilidad.",
+    cta:"Quiero el material y los 2 pasos de contingencia"
+  }
+};
+
+let cur=0,ans=[],sel=null;
+
+function start(){show('s-quiz');render();}
+
+function render(){
+  const q=Qs[cur];
+  const pct=Math.round((cur/Qs.length)*100);
+  document.getElementById('qctr').textContent=`Pregunta ${cur+1} de ${Qs.length}`;
+  document.getElementById('qpct').textContent=pct+'%';
+  document.getElementById('pfill').style.width=pct+'%';
+  document.getElementById('qnum').textContent=`PREGUNTA ${String(cur+1).padStart(2,'0')}`;
+  document.getElementById('qtxt').textContent=q.t;
+  const box=document.getElementById('qopts');
+  box.innerHTML='';
+  ['A','B','C','D'].forEach((lt,i)=>{
+    const b=document.createElement('button');
+    b.className='opt';
+    b.innerHTML=`<span class="opt-letter">${lt}</span><span>${q.o[i].t}</span>`;
+    b.onclick=()=>pick(b,q.o[i].l);
+    box.appendChild(b);
+  });
+  sel=null;
+  document.getElementById('bnext').classList.remove('on');
+}
+
+function pick(btn,lvl){
+  document.querySelectorAll('.opt').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  sel=lvl;
+  document.getElementById('bnext').classList.add('on');
+}
+
+function next(){
+  if(sel===null)return;
+  ans.push(sel);
+  if(cur<Qs.length-1){
+    cur++;
+    const c=document.getElementById('qcard');
+    c.style.opacity='0';c.style.transform='translateY(10px)';
+    setTimeout(()=>{
+      render();
+      c.style.transition='opacity .35s,transform .35s';
+      c.style.opacity='1';c.style.transform='translateY(0)';
+    },170);
+  } else { result(); }
+}
+
+function classify(a){
+  const c4=a.filter(x=>x===4).length;
+  const c3=a.filter(x=>x===3).length;
+  const avg=Math.round(a.reduce((s,x)=>s+x,0)/a.length);
+  // Banderas rojas en cascada (prioriza la señal más grave)
+  if(c4>=2) return 4;                 // 2+ señales de no retorno => Ruptura Estructural
+  if(c4>=1) return Math.max(avg,3);   // 1 señal de no retorno => piso en Nivel 3
+  if(c3>=2) return Math.max(avg,3);   // 2+ señales fuertes => piso en Nivel 3
+  return Math.min(Math.max(avg,1),4); // promedio acotado 1-4
+}
+
+function result(){
+  const fl=classify(ans);
+  const lv=Lvls[fl];
+  let dots='';
+  for(let i=1;i<=4;i++) dots+=`<div class="res-dot${i<=lv.dots?' on':''}"></div>`;
+  const isL4=fl===4;
+  document.getElementById('s-result').innerHTML=`
+    <div class="res-card ${lv.cls}">
+      <div class="res-head">
+        <div class="res-icon" style="font-size:46px">${lv.icon}</div>
+        <div class="res-tag">${lv.tag}</div>
+        <div class="res-dots">${dots}</div>
+        <h2 class="res-title">${lv.name}</h2>
+        <p class="res-sub">${lv.sub}</p>
+      </div>
+      <div class="res-body">
+        <div class="sec-label">Diagnóstico</div>
+        <p class="res-diag">${lv.diag}</p>
+        <div class="alert-box">${lv.alert}</div>
+        <p class="cta-label">${isL4?'Tu siguiente paso':'Toma acción ahora'}</p>
+        <a href="${isL4?WA:CAL}" target="_blank" rel="noopener" class="btn-cta">${lv.cta}</a>
+        <button class="btn-reset" onclick="reset()">Volver a empezar</button>
+      </div>
+    </div>`;
+  show('s-result');
+}
+
+function reset(){
+  cur=0;ans=[];sel=null;
+  document.getElementById('pfill').style.width='0%';
+  show('s-intro');
+}
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+</script>
+</body>
+</html>
